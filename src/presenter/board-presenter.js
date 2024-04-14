@@ -3,27 +3,66 @@ import EditPointView from '../view/edit-point-view.js';
 import EventListView from '../view/event-list-view.js';
 import SortView from '../view/sort-view.js';
 import PointView from '../view/point-view.js';
-import { generatePoint } from '../mock/point.js';
+import NoPointsView from '../view/no-points-view.js';
 
 export default class BoardPresenter {
+  #container = null;
+  #pointsModel = null;
   eventListComponent = new EventListView();
-
+  #boardPoints = [];
   constructor({ container, pointsModel }) {
-    this.container = container;
-    this.pointsModel = pointsModel;
+    this.#container = container;
+    this.#pointsModel = pointsModel;
   }
 
   init() {
-    this.points = [...this.pointsModel.getPoints()];
+    this.#boardPoints = [...this.#pointsModel.points];
+    this.#renderBoard();
+  }
 
-    render(new SortView(), this.container);
-    render(this.eventListComponent, this.container);
+  #renderPoint(point) {
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceFormToPoint();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
 
-    render(new EditPointView(generatePoint()), this.eventListComponent.getElement());
-
-    this.points.forEach((point) => {
-      const newPoint = new PointView(point);
-      render(newPoint, this.eventListComponent.getElement());
+    const pointComponent = new PointView({
+      point, onEditClick: () => {
+        replacePointToForm();
+        document.addEventListener('keydown', escKeyDownHandler);
+      }
     });
+
+    const editPointComponent = new EditPointView({
+      point,
+      onFormSubmit: () => {
+        replaceFormToPoint();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    function replacePointToForm() {
+      editPointComponent.replace(editPointComponent, pointComponent);
+    }
+
+    function replaceFormToPoint() {
+      editPointComponent.replace(pointComponent, editPointComponent);
+    }
+
+    render(pointComponent, this.eventListComponent.element);
+  }
+
+  #renderBoard() {
+    render(new SortView(), this.#container);
+    render(this.eventListComponent, this.#container);
+
+    this.#boardPoints.forEach((point) => this.#renderPoint(point));
+
+    if (this.#boardPoints.length === 0) {
+      render(new NoPointsView, this.eventListComponent.element);
+    }
   }
 }
