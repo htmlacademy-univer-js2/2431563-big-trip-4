@@ -1,32 +1,34 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import { formatStringToShortDate, getPointDuration, formatStringToTime } from '../utils.js';
 
-const pointTemplate = `<li class="trip-events__item">
+const getPointTemplate = (point) => `<li class="trip-events__item">
 <div class="event">
-  <time class="event__date" datetime="2019-03-18">MAR 18</time>
+  <time class="event__date" datetime="2019-03-18">${formatStringToShortDate(point.dateFrom)}</time>
   <div class="event__type">
-    <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
+    <img class="event__type-icon" width="42" height="42" src="${point.type.img}" alt="Event type icon">
   </div>
-  <h3 class="event__title">Taxi Amsterdam</h3>
+  <h3 class="event__title">${point.type.title} ${point.destination.name}</h3>
   <div class="event__schedule">
     <p class="event__time">
-      <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+      <time class="event__start-time" datetime="2019-03-18T10:30">${formatStringToTime(point.dateFrom)}</time>
       &mdash;
-      <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+      <time class="event__end-time" datetime="2019-03-18T11:00">${formatStringToTime(point.dateTo)}</time>
     </p>
-    <p class="event__duration">30M</p>
+    <p class="event__duration">${getPointDuration(point.dateFrom, point.dateTo)}</p>
   </div>
   <p class="event__price">
-    &euro;&nbsp;<span class="event__price-value">20</span>
+    &euro;&nbsp;<span class="event__price-value">${point.basePrice}</span>
   </p>
   <h4 class="visually-hidden">Offers:</h4>
   <ul class="event__selected-offers">
     <li class="event__offer">
-      <span class="event__offer-title">Order Uber</span>
+      <span class="event__offer-title">${point.offers[0].title}</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">20</span>
+      <span class="event__offer-price">${point.offers[0].price}</span>
     </li>
   </ul>
-  <button class="event__favorite-btn event__favorite-btn--active" type="button">
+  <button class="event__favorite-btn ${point.isFavorite
+    ? 'event__favorite-btn--active' : ' '}" type="button">
     <span class="visually-hidden">Add to favorite</span>
     <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
       <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -38,20 +40,24 @@ const pointTemplate = `<li class="trip-events__item">
 </div>
 </li>`;
 
-export default class PointView {
-  getTemplate() {
-    return pointTemplate;
+export default class PointView extends AbstractView {
+  #point = null;
+  #handleEditClick = null;
+
+  constructor({ point, onEditClick }) {
+    super();
+    this.#point = point;
+    this.#handleEditClick = onEditClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
+  get template() {
+    return getPointTemplate(this.#point);
   }
 
-  removeElement() {
-    this.element = null;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }

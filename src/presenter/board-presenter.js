@@ -1,16 +1,17 @@
-import { render } from '../render.js';
-
-import EditPointView from '../view/edit-point-view.js';
+import { render, replace } from '../framework/render.js';
 import EventListView from '../view/event-list-view.js';
 import SortView from '../view/sort-view.js';
 import PointView from '../view/point-view.js';
+import EditPointView from '../view/edit-point-view.js';
 import NoPointsView from '../view/no-points-view.js';
 
 export default class BoardPresenter {
   #container = null;
   #pointsModel = null;
   eventListComponent = new EventListView();
+
   #boardPoints = [];
+
   constructor({ container, pointsModel }) {
     this.#container = container;
     this.#pointsModel = pointsModel;
@@ -18,6 +19,7 @@ export default class BoardPresenter {
 
   init() {
     this.#boardPoints = [...this.#pointsModel.points];
+
     this.#renderBoard();
   }
 
@@ -46,11 +48,11 @@ export default class BoardPresenter {
     });
 
     function replacePointToForm() {
-      editPointComponent.replace(editPointComponent, pointComponent);
+      replace(editPointComponent, pointComponent);
     }
 
     function replaceFormToPoint() {
-      editPointComponent.replace(pointComponent, editPointComponent);
+      replace(pointComponent, editPointComponent);
     }
 
     render(pointComponent, this.eventListComponent.element);
