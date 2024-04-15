@@ -1,4 +1,5 @@
 import { render } from '../render.js';
+
 import EditPointView from '../view/edit-point-view.js';
 import EventListView from '../view/event-list-view.js';
 import SortView from '../view/sort-view.js';
