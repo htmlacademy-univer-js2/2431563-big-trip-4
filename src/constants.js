@@ -42,8 +42,8 @@ const TYPES = [
   { title: 'Flight', img: 'img/icons/flight.png' },
   { title: 'Restaurant', img: 'img/icons/restaurant.png' },
   { title: 'Sightseeing', img: 'img/icons/sightseeing.png' },
-  { title: 'Ship', img: 'img/icons/ship.png' },
-  { title: 'Train', img: 'img/icons/train.png' }
+  { title: 'Train', img: 'img/icons/train.png' },
+  { title: 'Ship', img: 'img/icons/ship.png' }
 ];
 
 const OFFERS = [
@@ -59,27 +59,40 @@ const OFFERS = [
 ];
 
 const POINT_COUNT = 20;
+const OFFER_COUNT = 3;
 
-const Filter = {
+const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
   PAST: 'past',
 };
 
-const Sort = {
-  DEFAULT: 'default',
+const SortType = {
   DAY: 'day',
   EVENT: 'event',
   TIME: 'time',
   PRICE: 'price',
   OFFERS: 'offers',
+};
+
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
   INIT: 'INIT',
 };
+
 
 export {
   LOREM_SENTENCES, RANDOM_IMG_URL,
   MSEC_IN_DAY, MSEC_IN_HOUR,
-  Price, Duration, CITIES, TYPES, OFFERS, POINT_COUNT,
-  Filter, Sort
+  Price, Duration, CITIES, TYPES, OFFERS, POINT_COUNT, OFFER_COUNT,
+  FilterType, SortType, UpdateType, UserAction
 };
