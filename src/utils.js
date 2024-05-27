@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { LOREM_SENTENCES, RANDOM_IMG_URL, MSEC_IN_DAY, MSEC_IN_HOUR } from './constants.js';
+import { LOREM_SENTENCES, RANDOM_IMG_URL, MSEC_IN_DAY, MSEC_IN_HOUR } from './const.js';
 
 const getRandomInteger = (min, max) => {
   const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
@@ -10,10 +10,15 @@ const getRandomInteger = (min, max) => {
 };
 
 const getRandomElement = (array) => array[Math.floor(Math.random() * array.length)];
+
 const getRandomImageURL = () => `${RANDOM_IMG_URL}${crypto.randomUUID()}`;
+
 const getRandomLoremSentence = () => getRandomElement(LOREM_SENTENCES);
+
 const formatStringToShortDate = (string) => dayjs(string).format('MMM DD');
+
 const formatStringToTime = (string) => dayjs(string).format('HH:mm');
+
 const capitalize = (string) => `${string[0].toUpperCase()}${string.slice(1)}`;
 
 const getPointDuration = (dateFrom, dateTo) => {
@@ -36,7 +41,37 @@ const getPointDuration = (dateFrom, dateTo) => {
   return pointDuration;
 };
 
+const isPointInTheFuture = (point) => dayjs(point.dateFrom).isAfter(dayjs());
+
+const isPointInThePast = (point) => {
+  const currentDate = dayjs();
+  const isStartDateBeforeOrEqual = dayjs(point.dateFrom).isBefore(currentDate) || dayjs(point.dateFrom).isSame(currentDate);
+  const isEndDateAfterOrEqual = dayjs(point.dateTo).isAfter(currentDate) || dayjs(point.dateTo).isSame(currentDate);
+
+  return isStartDateBeforeOrEqual && isEndDateAfterOrEqual;
+};
+
+const isPointInThePresent = (point) => dayjs(point.dateTo).isBefore(dayjs());
+
+
+// Сортировка
+
+const sortPrice = (firstPoint, secondPoint) => secondPoint.basePrice - firstPoint.basePrice;
+
+const sortDay = (firstPoint, secondPoint) => dayjs(firstPoint.dateFrom).diff(dayjs(secondPoint.dateFrom));
+
+const sortTime = (firstPoint, secondPoint) => {
+  const timePointA = dayjs(firstPoint.dateTo).diff(dayjs(firstPoint.dateFrom));
+  const timePointB = dayjs(secondPoint.dateTo).diff(dayjs(secondPoint.dateFrom));
+  return timePointB - timePointA;
+};
+
+const areDatesSame = (oldDate, newDate) => dayjs(oldDate).isSame(dayjs(newDate));
+
 export {
   getRandomImageURL, getRandomLoremSentence, getRandomInteger, getRandomElement,
-  getPointDuration, capitalize, formatStringToShortDate, formatStringToTime
+  getPointDuration, capitalize, formatStringToShortDate, formatStringToTime,
+  isPointInThePresent, isPointInTheFuture, isPointInThePast,
+  sortDay, sortPrice, sortTime, areDatesSame
 };
+

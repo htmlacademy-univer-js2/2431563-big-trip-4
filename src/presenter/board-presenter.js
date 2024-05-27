@@ -2,6 +2,7 @@ import { render, remove, RenderPosition } from '../framework/render.js';
 import EventListView from '../view/event-list-view.js';
 import SortView from '../view/sort-view.js';
 import NoPointsView from '../view/no-points-view.js';
+import LoadingView from '../view/loading-view.js';
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import { sortDay, sortPrice, sortTime } from '../utils.js';
@@ -16,12 +17,14 @@ export default class BoardPresenter {
   #sortComponent = null;
   #noPointsComponent = null;
   #eventListComponent = new EventListView();
+  #loadingComponent = new LoadingView();
 
   #pointPresenters = new Map();
   #newPointPresenter = null;
 
   #currentSortType = Sort.DAY;
   #filterType = Filter.ALL;
+  #isLoading = true;
 
   constructor({ container, pointsModel, filterModel, onNewTaskDestroy }) {
     this.#container = container;
@@ -70,10 +73,10 @@ export default class BoardPresenter {
         this.#pointsModel.updatePoint(updateType, update);
         break;
       case UserAction.ADD_POINT:
-        this.#pointsModel.addTask(updateType, update);
+        this.#pointsModel.addPoint(updateType, update);
         break;
       case UserAction.DELETE_POINT:
-        this.#pointsModel.deleteTask(updateType, update);
+        this.#pointsModel.deletePoint(updateType, update);
         break;
     }
   };
@@ -91,6 +94,11 @@ export default class BoardPresenter {
         this.#clearBoard({ resetSortType: true });
         this.#renderBoard();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderBoard();
+        break;
     }
   };
 
@@ -100,6 +108,8 @@ export default class BoardPresenter {
 
     remove(this.#sortComponent);
     remove(this.#noPointsComponent);
+    remove(this.#loadingComponent);
+
     if (this.#noPointsComponent) {
       remove(this.#noPointsComponent);
     }
@@ -140,6 +150,10 @@ export default class BoardPresenter {
     render(this.#sortComponent, this.#container, RenderPosition.AFTERBEGIN);
   }
 
+  #renderLoading() {
+    render(this.#loadingComponent, this.#eventListComponent.element, RenderPosition.AFTERBEGIN);
+  }
+
   #renderNoPoints() {
     this.#noPointsComponent = new NoPointsView({
       filterType: this.#filterType,
@@ -154,14 +168,18 @@ export default class BoardPresenter {
   }
 
   #renderBoard() {
-    this.#renderSort();
     const points = this.points;
     const pointCount = points.length;
+
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
 
     if (pointCount === 0) {
       this.#renderNoPoints();
     }
-
+    this.#renderSort();
     this.#renderPointList(this.points);
   }
 

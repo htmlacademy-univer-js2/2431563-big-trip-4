@@ -1,13 +1,25 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { formatStringToShortDate, getPointDuration, formatStringToTime } from '../utils.js';
 
+const getOfferTemplate = (offer) => `
+<li class="event__offer">
+  <span class="event__offer-title">${offer}</span>
+  &plus;&euro;&nbsp;
+  <span class="event__offer-price">${offer}</span>
+</li>`;
+
+const getOffersTemplate = (offers) => {
+  const offerTemplates = offers.map((offer) => getOfferTemplate(offer));
+  return offerTemplates.join('');
+};
+
 const getPointTemplate = (point) => `<li class="trip-events__item">
 <div class="event">
   <time class="event__date" datetime="2019-03-18">${formatStringToShortDate(point.dateFrom)}</time>
   <div class="event__type">
     <img class="event__type-icon" width="42" height="42" src="${point.type.img}" alt="Event type icon">
   </div>
-  <h3 class="event__title">${point.type.title} ${point.destination.name}</h3>
+  <h3 class="event__title">${point.type} ${point.destination}</h3>
   <div class="event__schedule">
     <p class="event__time">
       <time class="event__start-time" datetime="2019-03-18T10:30">${formatStringToTime(point.dateFrom)}</time>
@@ -21,11 +33,7 @@ const getPointTemplate = (point) => `<li class="trip-events__item">
   </p>
   <h4 class="visually-hidden">Offers:</h4>
   <ul class="event__selected-offers">
-    <li class="event__offer">
-      <span class="event__offer-title">${point.offers[0].title}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${point.offers[0].price}</span>
-    </li>
+  ${getOffersTemplate(point.offers)}
   </ul>
   <button class="event__favorite-btn ${point.isFavorite
     ? 'event__favorite-btn--active' : ' '}" type="button">
@@ -43,13 +51,18 @@ const getPointTemplate = (point) => `<li class="trip-events__item">
 export default class PointView extends AbstractView {
   #point = null;
   #handleEditClick = null;
+  #handleFavoriteClick = null;
 
-  constructor({ point, onEditClick }) {
+  constructor({ point, onEditClick, onFavoriteClick }) {
     super();
     this.#point = point;
+
     this.#handleEditClick = onEditClick;
+    this.#handleFavoriteClick = onFavoriteClick;
 
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.event__favorite-btn')
+      .addEventListener('click', this.#favoriteClickHandler);
   }
 
   get template() {
@@ -59,5 +72,10 @@ export default class PointView extends AbstractView {
   #editClickHandler = (evt) => {
     evt.preventDefault();
     this.#handleEditClick();
+  };
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
   };
 }

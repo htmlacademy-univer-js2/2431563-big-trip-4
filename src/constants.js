@@ -74,6 +74,7 @@ const Sort = {
   TIME: 'time',
   PRICE: 'price',
   OFFERS: 'offers',
+  INIT: 'INIT',
 };
 
 export {

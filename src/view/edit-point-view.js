@@ -154,8 +154,6 @@ export default class EditPointView extends AbstractStatefulView {
     this.#point = point;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleDeleteClick = onDeleteClick;
-
-    this._restoreHandlers();
   }
 
   get template() {
@@ -285,4 +283,5 @@ export default class EditPointView extends AbstractStatefulView {
 
   static parsePointToState = (point) => point;
   static parseStateToPoint = (state) => state;
+
 }
