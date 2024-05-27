@@ -61,14 +61,14 @@ const OFFERS = [
 const POINT_COUNT = 20;
 const OFFER_COUNT = 3;
 
-const FilterType = {
+const Filter = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
   PAST: 'past',
 };
 
-const SortType = {
+const Sort = {
   DAY: 'day',
   EVENT: 'event',
   TIME: 'time',
@@ -94,5 +94,5 @@ export {
   LOREM_SENTENCES, RANDOM_IMG_URL,
   MSEC_IN_DAY, MSEC_IN_HOUR,
   Price, Duration, CITIES, TYPES, OFFERS, POINT_COUNT, OFFER_COUNT,
-  FilterType, SortType, UpdateType, UserAction
+  Filter, Sort, UpdateType, UserAction
 };
