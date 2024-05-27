@@ -1,11 +1,11 @@
-import { FilterType } from './const.js';
+import { Filter } from './constants.js';
 import { isPointInTheFuture, isPointInThePast, isPointInThePresent } from './utils.js';
 
 const filter = {
-  [FilterType.EVERYTHING]: (points) => points,
-  [FilterType.FUTURE]: (points) => points.filter((point) => isPointInTheFuture(point)),
-  [FilterType.PRESENT]: (points) => points.filter((point) => isPointInThePresent(point)),
-  [FilterType.PAST]: (points) => points.filter((point) => isPointInThePast(point))
+  [Filter.EVERYTHING]: (points) => points,
+  [Filter.FUTURE]: (points) => points.filter((point) => isPointInTheFuture(point)),
+  [Filter.PRESENT]: (points) => points.filter((point) => isPointInThePresent(point)),
+  [Filter.PAST]: (points) => points.filter((point) => isPointInThePast(point))
 };
 
 export { filter };

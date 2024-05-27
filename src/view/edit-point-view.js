@@ -1,4 +1,4 @@
-import { TYPES } from '../const.js';
+import { TYPES } from '../constants.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { generateDestinations } from '../mock/destination.js';
 import { capitalize } from '../utils.js';
