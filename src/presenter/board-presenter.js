@@ -1,12 +1,12 @@
 import { render, remove, RenderPosition } from '../framework/render.js';
 import EventListView from '../view/event-list-view.js';
 import SortView from '../view/sort-view.js';
-import NoPointsView from '../view/no-points-view.js';
-import LoadingView from '../view/loading-view.js';
-import PointPresenter from './point-presenter.js';
-import NewPointPresenter from './new-point-presenter.js';
+import NoPointsView from '../view/no-point-view.js';
+import LoadingView from '../view/load-view.js';
+import PointPresenter from './presenter-point.js';
+import NewPointPresenter from './presenter-new-point.js';
 import { sortDay, sortPrice, sortTime } from '../utils.js';
-import { Sort, UpdateType, UserAction, Filter } from '../const.js';
+import { Sort, UpdateType, UserAction, Filter } from '../constants.js';
 import { filter } from '../filter.js';
 
 export default class BoardPresenter {

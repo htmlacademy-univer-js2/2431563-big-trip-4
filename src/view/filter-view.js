@@ -10,7 +10,6 @@ const createFilterItemTemplate = (filter) => {
   </div>`;
 };
 
-
 const createFilterTemplate = (filterItems) => {
   const filterItemsTemplate = filterItems
     .map((filter) => createFilterItemTemplate(filter))

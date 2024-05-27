@@ -1,6 +1,6 @@
 import { remove, render, RenderPosition } from '../framework/render.js';
 import { nanoid } from 'nanoid';
-import { UserAction, UpdateType } from '../const.js';
+import { UserAction, UpdateType } from '../constants.js';
 import EditPointView from '../view/edit-point-view.js';
 import { generatePoint } from '../mock/point.js';
 
