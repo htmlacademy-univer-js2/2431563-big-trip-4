@@ -42,6 +42,7 @@ const TYPES = [
   { title: 'Flight', img: 'img/icons/flight.png' },
   { title: 'Restaurant', img: 'img/icons/restaurant.png' },
   { title: 'Sightseeing', img: 'img/icons/sightseeing.png' },
+  { title: 'Ship', img: 'img/icons/ship.png' },
   { title: 'Train', img: 'img/icons/train.png' }
 ];
 
