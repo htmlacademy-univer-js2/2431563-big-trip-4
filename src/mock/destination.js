@@ -1,20 +1,28 @@
 import { CITIES } from '../constants.js';
-import { getRandomElement, getRandomImageURL, getRandomLoremSentence } from '../utils.js';
+import { getRandomImageURL, getRandomLoremSentence } from '../utils.js';
 
-const generateDestination = () => {
-  const city = getRandomElement(CITIES);
+const PICTURE_COUNT = 4;
 
-  return {
+const generatePicture = (city) => {
+  const picture = {
+    src: getRandomImageURL(),
+    description: `${city}`
+  };
+
+  return picture;
+};
+
+const generateDestination = (city) => {
+  const destination = {
     id: crypto.randomUUID(),
     name: city,
     description: getRandomLoremSentence(),
-    pictures: [
-      {
-        'src': getRandomImageURL(),
-        'description': `${city}`
-      }
-    ]
+    pictures: Array.from({ length: PICTURE_COUNT }, () => generatePicture(city))
   };
+
+  return destination;
 };
 
-export { generateDestination };
+const generateDestinations = () => CITIES.map((city) => generateDestination(city));
+
+export { generateDestination, generateDestinations };

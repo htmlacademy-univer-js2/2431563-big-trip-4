@@ -50,8 +50,6 @@ export default class NewPointPresenter {
     this.#handleDataChange(
       UserAction.ADD_TASK,
       UpdateType.MINOR,
-      // Пока у нас нет сервера, который бы после сохранения
-      // выдывал честный id задачи, нам нужно позаботиться об этом самим
       { id: nanoid(), ...task },
     );
     this.destroy();
