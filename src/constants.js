@@ -13,10 +13,8 @@ const LOREM_SENTENCES = [
 ];
 
 const RANDOM_IMG_URL = 'https://loremflickr.com/248/152?random=';
-
 const MSEC_IN_HOUR = 1000 * 60 * 60;
 const MSEC_IN_DAY = 1000 * 60 * 60 * 24;
-
 const Price = {
   MIN: 0,
   MAX: 1000
@@ -82,7 +80,7 @@ const UserAction = {
   DELETE_POINT: 'DELETE_POINT',
 };
 
-const UpdateType = {
+const Update = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
@@ -94,5 +92,5 @@ export {
   LOREM_SENTENCES, RANDOM_IMG_URL,
   MSEC_IN_DAY, MSEC_IN_HOUR,
   Price, Duration, CITIES, TYPES, OFFERS, POINT_COUNT, OFFER_COUNT,
-  Filter, Sort, UpdateType, UserAction
+  Filter, Sort, Update, UserAction
 };

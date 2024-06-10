@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { LOREM_SENTENCES, RANDOM_IMG_URL, MSEC_IN_DAY, MSEC_IN_HOUR } from './constants.js';
+import { LOREM_SENTENCES, RANDOM_IMG_URL, MSEC_IN_DAY, MSEC_IN_HOUR, TYPES } from './constants.js';
 
 const getRandomInteger = (min, max) => {
   const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
@@ -10,22 +10,15 @@ const getRandomInteger = (min, max) => {
 };
 
 const getRandomElement = (array) => array[Math.floor(Math.random() * array.length)];
-
 const getRandomImageURL = () => `${RANDOM_IMG_URL}${crypto.randomUUID()}`;
-
 const getRandomLoremSentence = () => getRandomElement(LOREM_SENTENCES);
-
 const formatStringToShortDate = (string) => dayjs(string).format('MMM DD');
-
 const formatStringToTime = (string) => dayjs(string).format('HH:mm');
-
 const capitalize = (string) => `${string[0].toUpperCase()}${string.slice(1)}`;
-
+const humanizeEventTime = (dateTime, format) => dayjs(dateTime).format(format).toUpperCase();
 const getPointDuration = (dateFrom, dateTo) => {
   const timeDiff = dayjs(dateTo).diff(dayjs(dateFrom));
-
   let pointDuration = 0;
-
   switch (true) {
     case (timeDiff > MSEC_IN_DAY):
       pointDuration = dayjs(timeDiff).format('DD[D] HH[H] mm[M]');
@@ -42,7 +35,6 @@ const getPointDuration = (dateFrom, dateTo) => {
 };
 
 const isPointInTheFuture = (point) => dayjs(point.dateFrom).isAfter(dayjs());
-
 const isPointInThePast = (point) => {
   const currentDate = dayjs();
   const isStartDateBeforeOrEqual = dayjs(point.dateFrom).isBefore(currentDate) || dayjs(point.dateFrom).isSame(currentDate);
@@ -52,14 +44,8 @@ const isPointInThePast = (point) => {
 };
 
 const isPointInThePresent = (point) => dayjs(point.dateTo).isBefore(dayjs());
-
-
-// Сортировка
-
 const sortPrice = (firstPoint, secondPoint) => secondPoint.basePrice - firstPoint.basePrice;
-
 const sortDay = (firstPoint, secondPoint) => dayjs(firstPoint.dateFrom).diff(dayjs(secondPoint.dateFrom));
-
 const sortTime = (firstPoint, secondPoint) => {
   const timePointA = dayjs(firstPoint.dateTo).diff(dayjs(firstPoint.dateFrom));
   const timePointB = dayjs(secondPoint.dateTo).diff(dayjs(secondPoint.dateFrom));
@@ -67,11 +53,11 @@ const sortTime = (firstPoint, secondPoint) => {
 };
 
 const areDatesSame = (oldDate, newDate) => dayjs(oldDate).isSame(dayjs(newDate));
+const getTypeLogo = (type) => TYPES.find((t) => t.title.toLowerCase() === type.toLowerCase()).img;
 
 export {
   getRandomImageURL, getRandomLoremSentence, getRandomInteger, getRandomElement,
   getPointDuration, capitalize, formatStringToShortDate, formatStringToTime,
   isPointInThePresent, isPointInTheFuture, isPointInThePast,
-  sortDay, sortPrice, sortTime, areDatesSame
+  sortDay, sortPrice, sortTime, areDatesSame, getTypeLogo, humanizeEventTime
 };
-
