@@ -1,18 +1,22 @@
 import { remove, render, RenderPosition } from '../framework/render.js';
-import { nanoid } from 'nanoid';
-import { UserAction, UpdateType } from '../constants.js';
+import { UserAction, Update, TYPES } from '../constants.js';
 import EditPointView from '../view/edit-point-view.js';
-import { generatePoint } from '../mock/point.js';
+import dayjs from 'dayjs';
 
 export default class NewPointPresenter {
-  #taskListContainer = null;
+  #destinations = null;
+  #destinationNames = null;
+  #offersByType = null;
+  #pointListContainer = null;
   #handleDataChange = null;
   #handleDestroy = null;
-
   #editPointComponent = null;
 
-  constructor({ taskListContainer, onDataChange, onDestroy }) {
-    this.#taskListContainer = taskListContainer;
+  constructor({ pointListContainer, offersByType, destinations, destinationNames, onDataChange, onDestroy }) {
+    this.#pointListContainer = pointListContainer;
+    this.#offersByType = offersByType;
+    this.#destinations = destinations;
+    this.#destinationNames = destinationNames;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
   }
@@ -23,14 +27,29 @@ export default class NewPointPresenter {
     }
 
     this.#editPointComponent = new EditPointView({
-      point: generatePoint(),
+      point: this.#generateDefaultPoint(),
+      offersByType: this.#offersByType,
+      destinations: this.#destinations,
+      destinationNames: this.#destinationNames,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick
     });
-
-    render(this.#editPointComponent, this.#taskListContainer, RenderPosition.AFTERBEGIN);
+    render(this.#editPointComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
+  }
+
+  #generateDefaultPoint() {
+    return {
+      id: crypto.randomUUID(),
+      basePrice: 0,
+      dateFrom: dayjs().toDate(),
+      dateTo: dayjs().add(1, 'm').toDate(),
+      destination: this.#destinations[0].id,
+      isFavorite: false,
+      offers: [],
+      type: TYPES[0].title,
+    };
   }
 
   destroy() {
@@ -46,11 +65,11 @@ export default class NewPointPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
-  #handleFormSubmit = (task) => {
+  #handleFormSubmit = (point) => {
     this.#handleDataChange(
-      UserAction.ADD_TASK,
-      UpdateType.MINOR,
-      { id: nanoid(), ...task },
+      UserAction.ADD_POINT,
+      Update.MINOR,
+      point,
     );
     this.destroy();
   };
@@ -59,9 +78,9 @@ export default class NewPointPresenter {
     this.destroy();
   };
 
-  #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
+  #escKeyDownHandler = (event) => {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      event.preventDefault();
       this.destroy();
     }
   };
