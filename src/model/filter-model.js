@@ -2,12 +2,7 @@ import Observable from '../framework/observable.js';
 import { Filter } from '../constants.js';
 
 export default class FilterModel extends Observable {
-  #filter = null;
-
-  constructor() {
-    super();
-    this.#filter = Filter.EVERYTHING;
-  }
+  #filter = Filter.EVERYTHING;
 
   get filter() {
     return this.#filter;
@@ -18,3 +13,4 @@ export default class FilterModel extends Observable {
     this._notify(update, filter);
   }
 }
+

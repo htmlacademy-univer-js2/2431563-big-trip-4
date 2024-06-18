@@ -1,48 +1,46 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeEventTime } from '../utils.js';
+import { getPointsDataRange, getTripPrice, getTripRoute } from '../utils.js';
+import { OFFER_COUNT } from '../constants.js';
 
-const TWO_TITLE_EVENTS_COUNT = 2;
-const THREE_TITLE_EVENTS_COUNT = 3;
-const getTripTitle = (points, destinations) => {
-  const firstDestinationName = destinations.find((place) => place.id === points[0].destination).name;
-  const lastDestinationName = destinations.find((place) => place.id === points[points.length - 1].destination).name;
-  switch (points.length) {
-    case 1:
-      return firstDestinationName;
-    case TWO_TITLE_EVENTS_COUNT:
-      return `${firstDestinationName} &mdash; ${lastDestinationName}`;
-    case THREE_TITLE_EVENTS_COUNT:
-      return `${firstDestinationName} &mdash; ${destinations.find((place) => place.id === points[1].destination).name} &mdash; ${lastDestinationName}`;
-    default:
-      return `${firstDestinationName} &mdash; . . . &mdash; ${lastDestinationName}`;
-  }
-};
+function createTripInfoTemplate({ dateRange, destinations, totalPrice }) {
+  return (
+    `<section class="trip-main__trip-info  trip-info">
+      <div class="trip-info__main">
+        <h1 class="trip-info__title">${destinations.length > OFFER_COUNT ? `${destinations[0]} &mdash; ... &mdash; ${destinations.at(-1)}` : destinations.join(' &mdash; ')}</h1>
 
-const createTripInfoTemplate = (points, price, destinations) => (
-  `<section class="trip-main__trip-info  trip-info">
-    <div class="trip-info__main">
-      <h1 class="trip-info__title">${getTripTitle(points, destinations)}</h1>
-      <p class="trip-info__dates">${humanizeEventTime(points[0].dateFrom, 'MMM D')}&nbsp;&mdash;&nbsp;${humanizeEventTime(points[points.length - 1].dateTo, 'MMM D')}</p>
-    </div>
-    <p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">${price}</span>
-    </p>
-  </section>`
-);
+        <p class="trip-info__dates">${dateRange.startDate}&nbsp;&mdash;&nbsp;${dateRange.endDate}</p>
+      </div>
+
+      <p class="trip-info__cost">
+        Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>
+      </p>
+    </section>`
+  );
+}
 
 export default class TripInfoView extends AbstractView {
-  #points = null;
-  #tripPrice = null;
+  #pointModel = null;
+  #offerModel = null;
+  #destinationModel = null;
+  #dateRange = null;
   #destinations = null;
+  #totalPrice = null;
 
-  constructor(points, tripPrice, destinations) {
+  constructor(pointModel, offerModel, destinationModel) {
     super();
-    this.#points = points;
-    this.#tripPrice = tripPrice;
-    this.#destinations = destinations;
+    this.#pointModel = pointModel;
+    this.#offerModel = offerModel;
+    this.#destinationModel = destinationModel;
+    this.#dateRange = getPointsDataRange(this.#pointModel.points);
+    this.#destinations = getTripRoute(this.#pointModel.points, this.#destinationModel);
+    this.#totalPrice = getTripPrice(this.#pointModel.points, this.#offerModel);
   }
 
   get template() {
-    return createTripInfoTemplate(this.#points, this.#tripPrice, this.#destinations);
+    return createTripInfoTemplate({
+      dateRange: this.#dateRange,
+      destinations: this.#destinations,
+      totalPrice: this.#totalPrice
+    });
   }
 }
