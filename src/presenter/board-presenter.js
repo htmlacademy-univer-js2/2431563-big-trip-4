@@ -143,7 +143,7 @@ export default class BoardPresenter {
   }
 
   #renderNoPointView() {
-    this.#noPointsComponent = new NoPointView(this.#isLoading);
+    this.#noPointsComponent = new NoPointView(this.#isLoading, this.#filterType);
 
     render(this.#noPointsComponent, this.#eventsContainer, RenderPosition.AFTERBEGIN);
   }
